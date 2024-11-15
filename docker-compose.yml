@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    image: php:8.1-apache
+    container_name: laravel-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:80"
+    networks:
+      - laravel
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: "adm1n123!"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - laravel
+    ports:
+      - "3306:3306"
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    ports:
+      - "8081:8080"
+    networks:
+      - laravel
+
+networks:
+  laravel:
+    driver: bridge
+
+volumes:
+  mysql-data:
