@@ -3,6 +3,7 @@
 namespace App\Http\Services\Posts;
 
 use App\Models\Posts;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -45,5 +46,32 @@ class PostsService
         ]);
 
         return $post;
+    }
+
+    /**
+     * Obtener post por usuario y categoría
+     *
+     * @param array $params
+     * @return \App\Models\Posts
+     */
+    public function getPostByCategoryAndUserId(int $category_id): Collection
+    {
+        // Validar el category_id
+        $validator = Validator::make(['category_id' => $category_id], [
+            'category_id' => [
+                'required',
+                'integer',
+                'exists:categories,id',
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
+
+        // Obtener los posts por category_id
+        $posts = Posts::byCategory($category_id)->get();
+
+        return $posts;
     }
 }

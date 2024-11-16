@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Posts;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
+use App\Http\Resources\PostsResource;
 use App\Http\Services\Posts\PostsService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -40,6 +41,34 @@ class PostsController extends Controller
                 'message' => 'Publicación registrado exitosamente',
                 'success' => true,
             ], Response::HTTP_CREATED);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'errors' => $e->errors(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error interno del servidor',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Obtener post por usuario y categoría
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getPostByCategoryAndUserId($category_id)
+    {
+        try {
+            $posts = $this->postsService->getPostByCategoryAndUserId($category_id);
+
+            return response()->json([
+                'data' => PostsResource::collection($posts),
+                'success' => true,
+            ], Response::HTTP_OK);
+
         } catch (ValidationException $e) {
             return response()->json([
                 'errors' => $e->errors(),

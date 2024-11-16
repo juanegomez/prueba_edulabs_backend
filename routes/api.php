@@ -11,4 +11,5 @@ Route::post('/login', [AuthController::class, 'login'])->name('login'); // Ruta 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']); // Ruta para cerrar sesión
     Route::post('/posts', [PostsController::class, 'create']); // Ruta para crear un post
+    Route::get('/posts/{categoryid}', [PostsController::class, 'getPostByCategoryAndUserId']); // Ruta para obtener posts por categoria
 });

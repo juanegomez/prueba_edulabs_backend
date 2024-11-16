@@ -22,6 +22,12 @@ class Posts extends Model
         return $this->belongsTo(Categories::class);
     }
 
+    //Relación con la tabla de users
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     /**
      * filtrar por category_id y ordenar por fecha.
      *
