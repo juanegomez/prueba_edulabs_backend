@@ -2,28 +2,40 @@ version: '3.8'
 
 services:
   app:
-    image: php:8.1-apache
-    container_name: laravel-app
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: laravel-app
     volumes:
       - .:/var/www/html
+    command: >
+      sh -c "
+      if [ ! -d /var/www/html/vendor ]; then composer install --no-dev --optimize-autoloader; fi &&
+      chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache &&
+      chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache &&
+      apache2-foreground
+      "
     ports:
       - "8000:80"
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
     networks:
       - laravel
 
   mysql:
     image: mysql:8.0
+    container_name: laravel-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: "adm1n123!"
+      MYSQL_ROOT_PASSWORD: adm1n123!
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
     volumes:
       - mysql-data:/var/lib/mysql
-    networks:
-      - laravel
     ports:
       - "3306:3306"
+    networks:
+      - laravel
 
   adminer:
     image: adminer

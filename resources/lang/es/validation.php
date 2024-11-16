@@ -159,5 +159,8 @@ return [
         'name' => 'nombre',
         'email' => 'correo electrónico',
         'password' => 'contraseña',
+        'title' => 'título',
+        'content' => 'contenido',
+        'category_id' => 'ID de la categoría',
     ],
 ];

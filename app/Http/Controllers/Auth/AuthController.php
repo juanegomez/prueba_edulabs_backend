@@ -41,6 +41,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Error interno del servidor',
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -67,6 +68,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Credenciales invalidas.',
+                'message' => $e->getMessage(),
             ], Response::HTTP_UNAUTHORIZED);
         }
     }
@@ -95,6 +97,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Error al cerrar sesión.',
+                'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
